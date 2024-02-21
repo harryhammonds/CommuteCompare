@@ -6,7 +6,7 @@ Shows CO2-e for different modes of transportation given an origin, destination a
 
 Uses Mapbox Geocoding, Search Box, Matrix, Mapping APIs
 
-CSV data from the US EPA: [https://www.fueleconomy.gov/](https://www.fueleconomy.gov/feg/download.shtml)https://www.fueleconomy.gov/feg/download.shtml
+CSV data from the US EPA: https://www.fueleconomy.gov/feg/download.shtml
 
 Node/Express.js backend
 Redis used for storing datasets

@@ -151,7 +151,7 @@ async function importCSV(filePath) {
 
   createIndex(client)
 }
-importCSV('./src/assets/vehicles3.csv')
+importCSV('./src/assets/vehicles-slim.csv')
 
 app.get('/search', async (req, res) => {
   const queryText = req.query.query || 'tesla' // search?query=text

@@ -58,15 +58,13 @@ function App() {
     setOriginCoord(coord)
   }
 
-  const [matrix, setMatrix] = useState([])
-  const [walkMatrix, setWalkMatrix] = useState([])
-  const [cycleMatrix, setCycleMatrix] = useState([])
+  const [matrix, setMatrix] = useState({})
+  const [walkMatrix, setWalkMatrix] = useState({})
+  const [cycleMatrix, setCycleMatrix] = useState({})
 
   function convertTimeToISO(timeStr) {
     const currentDate = new Date()
-    console.log(timeStr)
     const [time, modifier] = timeStr.split(' ')
-    console.log(time)
     let [hours, minutes] = time.split(':')
 
     if (modifier === 'PM' && hours !== '12') {
@@ -94,8 +92,8 @@ function App() {
     return formattedDate
   }
 
-  const prepareMatrix = async () => {
-    const time = convertTimeToISO(searchParams.get('time'))
+  const prepareMatrix = async (timeVal) => {
+    const time = convertTimeToISO(timeVal)
 
     if (originCoord.length === 0) {
       const origin = await getMapboxFeature(searchParams.get('origin'))
@@ -228,7 +226,6 @@ function App() {
                     updateDest(e[1])
                     setValues((values) => [e, ...values.slice(1)]) // update first value
                     setActiveStep(1)
-                    console.log(searchParams.get('time'))
                   }}
                   randomUUID={randomUUID}
                   className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 w-96 transition-all"
@@ -286,6 +283,7 @@ function App() {
                   }
                   placeholder="please enter journey start time..."
                   onComplete={(e) => {
+                    prepareMatrix(e[0])
                     setParam('time', e[0])
                     setValues((values) => [
                       values[0],
@@ -293,7 +291,6 @@ function App() {
                       e,
                       ...values.slice(3),
                     ]) // update third value
-                    prepareMatrix()
                     setActiveStep(3)
                     setTimeout(() => {
                       setActiveStep(4)

@@ -190,7 +190,7 @@ function App() {
 
   return (
     <>
-      <div className="flex justify-between items-center py-6 pl-6 sm:pl-10 pr-6 max-h-screen flex-grow">
+      <div className="flex justify-between items-center py-auto pl-6 sm:pl-10 pr-6 h-16">
         <h1 className="font-display text-xl">COMMUTE ANALYSIS</h1>
         <a
           href="https://github.com/harryhammonds/CommuteCompare"

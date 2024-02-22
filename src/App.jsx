@@ -190,7 +190,7 @@ function App() {
 
   return (
     <>
-      <div className="flex justify-between items-center py-6 pl-6 sm:pl-10 pr-6">
+      <div className="flex justify-between items-center py-6 pl-6 sm:pl-10 pr-6 max-h-screen flex-grow">
         <h1 className="font-display text-xl">COMMUTE ANALYSIS</h1>
         <a
           href="https://github.com/harryhammonds/CommuteCompare"
@@ -200,8 +200,8 @@ function App() {
           <h2 className="text-xs sm:text-sm">github.com/harryhammonds</h2>
         </a>
       </div>
-      <div className="flex flex-col md:flex-row w-full">
-        <div className="h-72 md:h-[100vh] w-full md:pl-8">
+      <div className="flex flex-col md:flex-row w-full flex-grow overflow-y-auto">
+        <div className="h-72 md:h-full w-full md:pl-8">
           <Map
             className="w-full h-full"
             originCoord={originCoord}
@@ -210,7 +210,7 @@ function App() {
         </div>
 
         <div
-          className={`flex justify-between ${activeStep === 4 ? 'md:w-[60rem]' : 'md:w-[50rem]'} md:pt-12 transition-all`}
+          className={`flex justify-between ${activeStep === 4 ? 'md:w-[60rem]' : 'md:w-[50rem]'} md:pt-12 max-h-screen transition-all overflow-y-scroll`}
         >
           <div className="flex items-start flex-col pl-6 [&_h2]:text-xl w-full">
             <div className={getStepClass(0)}>

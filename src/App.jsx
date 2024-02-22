@@ -140,15 +140,15 @@ function App() {
 
   function getStepClass(step) {
     if (activeStep === step && step === 3) {
-      return 'pb-8 transition-all translate-y-[-300px] duration-1000 w-96'
+      return 'pb-8 transition-all translate-y-[-300px] duration-1000 w-80 sm:w-96'
     } else if (activeStep === step) {
-      return 'pb-8 pt-2 transition-all w-96'
+      return 'pb-8 pt-2 transition-all w-80 sm:w-96'
     } else if (activeStep === 3) {
-      return 'opacity-0 transition-all w-96'
+      return 'opacity-0 transition-all w-80 sm:w-96'
     } else if (activeStep === 4) {
-      return 'hidden transition-all'
+      return 'hidden transition-all w-80 sm:w-96'
     } else {
-      return ''
+      return 'w-80 sm:w-96'
     }
   }
 
@@ -210,9 +210,9 @@ function App() {
         </div>
 
         <div
-          className={`flex justify-between ${activeStep === 4 ? 'md:w-[60rem]' : 'md:w-[50rem]'} md:pt-12 max-h-screen transition-all overflow-y-scroll`}
+          className={`flex justify-between ${activeStep === 4 ? 'md:w-[60rem]' : 'md:w-[50rem]'} md:pt-12 max-h-screen transition-all overflow-y-auto`}
         >
-          <div className="flex items-start flex-col pl-6 [&_h2]:text-xl w-full">
+          <div className="flex items-start flex-col pl-6 [&_h2]:text-xl">
             <div className={getStepClass(0)}>
               <h2 className={getHeaderClass(0)}>
                 <span className="text-4xl">1.</span> Destination
@@ -228,14 +228,14 @@ function App() {
                     setActiveStep(1)
                   }}
                   randomUUID={randomUUID}
-                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 w-96 transition-all"
+                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 w-80 sm:w-96 transition-all"
                   id="destination"
                 />
               ) : (
                 <InputPreview
                   value={value(0)}
                   onClick={() => setActiveStep(0)}
-                  className="text-neutral-400 font-mono w-[80vw] text-left pl-12 underline decoration-dashed underline-offset-2 cursor-pointer transition-all"
+                  className="text-neutral-400 font-mono text-left pl-12 underline decoration-dashed underline-offset-2 cursor-pointer transition-all"
                 />
               )}
             </div>
@@ -258,14 +258,14 @@ function App() {
                     setActiveStep(2)
                   }}
                   randomUUID={randomUUID}
-                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 w-96"
+                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 w-80 sm:w-96"
                   id="origin"
                 />
               ) : (
                 <InputPreview
                   value={value(1)} // or get from search params -> address from a const made available to the input form !!! TODAY
                   onClick={() => setActiveStep(1)}
-                  className="text-neutral-400 font-mono w-[80vw] text-left pl-12 underline decoration-dashed underline-offset-2 cursor-pointer transition-all"
+                  className="text-neutral-400 font-mono text-left pl-12 underline decoration-dashed underline-offset-2 cursor-pointer transition-all"
                 />
               )}
             </div>
@@ -296,14 +296,14 @@ function App() {
                       setActiveStep(4)
                     }, 1000)
                   }}
-                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 w-96"
+                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 w-80 sm:w-96"
                   id="time"
                 />
               ) : (
                 <InputPreview
                   value={value(2)}
                   onClick={() => setActiveStep(2)}
-                  className="text-neutral-400 font-mono w-[80vw] text-left pl-12 underline decoration-dashed underline-offset-2 cursor-pointer transition-all"
+                  className="text-neutral-400 font-mono text-left pl-12 underline decoration-dashed underline-offset-2 cursor-pointer transition-all"
                 />
               )}
             </div>

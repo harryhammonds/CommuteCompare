@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import '@fontsource/courier-prime/400.css'
 import '@fontsource/courier-prime/700.css'
@@ -11,12 +11,57 @@ import Map from './components/Map'
 import InputPreview from './components/InputPreview'
 import BackButton from './components/BackButton'
 import Results from './components/Results'
+import { convertTimeToISO } from './components/convertTimeToISO'
 import { v4 as uuidv4 } from 'uuid'
 
 const randomUUID = uuidv4()
 
 function App() {
+  const [activeStep, setActiveStep] = useState(0)
+  // to stop useEffect from running if we are intentionally changing our destination (activeStep === 0) inputs
+  const [alreadyLoaded, setAlreadyLoaded] = useState(false)
+
   // SEARCH PARAMS
+  useEffect(() => {
+    if ((activeStep === 0 && !alreadyLoaded) || activeStep === 3) {
+      const timeParam = searchParams.get('time')
+      const originParam = searchParams.get('origin')
+      const destinationParam = searchParams.get('destination')
+
+      if (originParam && destinationParam && timeParam) {
+        const origin = async () => {
+          if (mapOriginCoord.length === 0) {
+            const feature = await getMapboxFeature(originParam)
+            return feature
+          } else {
+            return mapOriginCoord
+          }
+        }
+
+        const destination = async () => {
+          if (mapDestinationCoord.length === 0) {
+            const feature = await getMapboxFeature(destinationParam)
+            return feature
+          } else {
+            return mapDestinationCoord
+          }
+        }
+
+        const prepareData = async () => {
+          const originCoord = await origin()
+          const destinationCoord = await destination()
+          await prepareMatrix(timeParam, originCoord, destinationCoord)
+        }
+
+        prepareData()
+
+        if (activeStep === 0) {
+          setActiveStep(4)
+        }
+      }
+    }
+  }, [activeStep])
+
   const [searchParams, setSearchParams] = useSearchParams()
 
   const setParam = (key, value) => {
@@ -25,10 +70,9 @@ function App() {
     setSearchParams(newParams)
   }
   const [values, setValues] = useState([])
-  const [activeStep, setActiveStep] = useState(0)
 
-  const [destinationCoord, setDestinationCoord] = useState([])
-  const [originCoord, setOriginCoord] = useState([])
+  const [mapDestinationCoord, setMapDestinationCoord] = useState([])
+  const [mapOriginCoord, setMapOriginCoord] = useState([])
 
   const getMapboxFeature = async (mapboxId) => {
     try {
@@ -37,10 +81,7 @@ function App() {
       )
       const data = await response.json()
 
-      return [
-        data.features[0].geometry.coordinates[0],
-        data.features[0].geometry.coordinates[1],
-      ]
+      return data.features[0].geometry.coordinates
     } catch (error) {
       console.error(error)
     }
@@ -49,63 +90,21 @@ function App() {
   const updateDest = async (mapboxId) => {
     setParam('destination', mapboxId)
     const coord = await getMapboxFeature(mapboxId)
-    setDestinationCoord(coord)
+    setMapDestinationCoord(coord)
   }
 
   const updateOrigin = async (mapboxId) => {
     setParam('origin', mapboxId)
     const coord = await getMapboxFeature(mapboxId)
-    setOriginCoord(coord)
+    setMapOriginCoord(coord)
   }
 
   const [matrix, setMatrix] = useState({})
   const [walkMatrix, setWalkMatrix] = useState({})
   const [cycleMatrix, setCycleMatrix] = useState({})
 
-  function convertTimeToISO(timeStr) {
-    const currentDate = new Date()
-    const [time, modifier] = timeStr.split(' ')
-    let [hours, minutes] = time.split(':')
-
-    if (modifier === 'PM' && hours !== '12') {
-      hours = parseInt(hours, 10) + 12
-    } else if (modifier === 'AM' && hours === '12') {
-      hours = '00'
-    }
-
-    hours = parseInt(hours)
-    minutes = parseInt(minutes)
-
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0')
-    const day = String(currentDate.getDate() + 1).padStart(2, '0')
-
-    if (hours < 10) {
-      hours = '0' + hours
-    }
-
-    if (minutes < 10) {
-      minutes = '0' + minutes
-    }
-
-    const formattedDate = `${currentDate.getFullYear()}-${month}-${day}T${hours}:${minutes}`
-
-    return formattedDate
-  }
-
-  const prepareMatrix = async (timeVal) => {
+  const prepareMatrix = async (timeVal, originCoord, destinationCoord) => {
     const time = convertTimeToISO(timeVal)
-
-    if (originCoord.length === 0) {
-      const origin = await getMapboxFeature(searchParams.get('origin'))
-      setOriginCoord(origin)
-    }
-
-    if (destinationCoord.length === 0) {
-      const destination = await getMapboxFeature(
-        searchParams.get('destination')
-      )
-      setOriginCoord(destination)
-    }
 
     try {
       const driving = await fetch(
@@ -188,6 +187,15 @@ function App() {
     return indicators
   }
 
+  function goBack() {
+    if (mapOriginCoord.length === 0 || mapDestinationCoord.length === 0) {
+      setSearchParams('') // clear search params
+      setActiveStep(0)
+    } else {
+      setActiveStep(-1)
+    }
+  }
+
   return (
     <>
       <div className="flex justify-between items-center py-auto pl-6 sm:pl-10 pr-6 h-16">
@@ -204,15 +212,15 @@ function App() {
         <div className="h-72 md:h-full w-full md:pl-8">
           <Map
             className="w-full h-full"
-            originCoord={originCoord}
-            destinationCoord={destinationCoord}
+            originCoord={mapOriginCoord}
+            destinationCoord={mapDestinationCoord}
           />
         </div>
 
         <div
-          className={`flex justify-between ${activeStep === 4 ? 'md:w-[60rem]' : 'md:w-[50rem]'} md:pt-12 max-h-screen transition-all overflow-y-auto`}
+          className={`flex justify-between ${activeStep === 4 ? 'md:w-[75rem]' : 'md:w-[60rem]'} md:pt-12 max-h-screen transition-all overflow-y-auto`}
         >
-          <div className="flex items-start flex-col pl-6 [&_h2]:text-xl">
+          <div className="flex items-start flex-col pl-3 sm:pl-6 [&_h2]:text-xl">
             <div className={getStepClass(0)}>
               <h2 className={getHeaderClass(0)}>
                 <span className="text-4xl">1.</span> Destination
@@ -228,7 +236,7 @@ function App() {
                     setActiveStep(1)
                   }}
                   randomUUID={randomUUID}
-                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 w-80 sm:w-96 transition-all"
+                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 text-sm sm:text-base w-[20rem] sm:w-96 transition-all"
                   id="destination"
                 />
               ) : (
@@ -246,11 +254,7 @@ function App() {
               {activeStep === 1 ? (
                 <Autocomplete
                   source="mapbox"
-                  value={
-                    //(values && values[1] && values[1][0]) || //searchParams.get('origin') ||
-                    //''
-                    value(1)
-                  }
+                  value={value(1)}
                   placeholder="please enter commute origin..."
                   onComplete={(e) => {
                     updateOrigin(e[1])
@@ -258,7 +262,7 @@ function App() {
                     setActiveStep(2)
                   }}
                   randomUUID={randomUUID}
-                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 w-80 sm:w-96"
+                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 text-sm sm:text-base w-[20rem] sm:w-96 transition-all"
                   id="origin"
                 />
               ) : (
@@ -276,14 +280,10 @@ function App() {
               {activeStep === 2 ? (
                 <Autocomplete
                   source="time"
-                  value={
-                    //(values && values[2] && values[2][0]) || //searchParams.get('time') ||
-                    //''
-                    value(2)
-                  }
+                  value={value(2)}
                   placeholder="please enter journey start time..."
                   onComplete={(e) => {
-                    prepareMatrix(e[0])
+                    //prepareMatrix(e[0])
                     setParam('time', e[0])
                     setValues((values) => [
                       values[0],
@@ -294,9 +294,10 @@ function App() {
                     setActiveStep(3)
                     setTimeout(() => {
                       setActiveStep(4)
+                      setAlreadyLoaded(true)
                     }, 1000)
                   }}
-                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 w-80 sm:w-96"
+                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 text-sm sm:text-base w-[20rem] sm:w-96 transition-all"
                   id="time"
                 />
               ) : (
@@ -317,7 +318,7 @@ function App() {
                 <span className="text-4xl">4.</span> Compare Modes{' '}
                 <BackButton
                   className="inline pl-3 cursor-pointer transition-all"
-                  onClick={() => setActiveStep(-1)}
+                  onClick={() => goBack()}
                 />
               </h2>
 

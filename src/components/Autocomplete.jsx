@@ -181,12 +181,12 @@ const Autocomplete = ({
 
   if (showSuggestions) {
     suggestionsListComponent = (
-      <ul className="max-h-80 overflow-y-scroll cursor-pointer hide-scrollbar">
+      <ul className="w-[20rem] sm:w-96 max-h-80 overflow-y-auto cursor-pointer hide-scrollbar z-10 absolute transition-all">
         {suggestions.map((suggestion, index) => {
-          let className = 'hover:bg-blue-100 bg-white'
+          let className = 'hover:bg-indigo-200 bg-white border-b border-gray-200'
 
           if (index === activeSuggestion) {
-            className = 'bg-blue-100'
+            className = 'hover:bg-indigo-200 bg-indigo-100'
           }
 
           return (

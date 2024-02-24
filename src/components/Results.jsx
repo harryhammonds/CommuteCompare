@@ -145,8 +145,8 @@ const Results = ({ className, matrix, walkMatrix, cycleMatrix }) => {
             </p>
             <p>
               distance:{' '}
-              {(walkMatrix.distances[0][1] / 1000).toFixed(2) || 'err'} km |
-              time: {(walkMatrix.durations[0][1] / 60).toFixed(2) || 'err'}{' '}
+              {/* {(walkMatrix.distances[0][1] / 1000).toFixed(2)} km |
+              time: {(walkMatrix.durations[0][1] / 60).toFixed(2)}{' '} */}
               minutes
             </p>
           </div>
@@ -174,8 +174,8 @@ const Results = ({ className, matrix, walkMatrix, cycleMatrix }) => {
             </p>
             <p>
               distance:{' '}
-              {(cycleMatrix.distances[0][1] / 1000).toFixed(2) || 'err'} km |
-              time: {(cycleMatrix.durations[0][1] / 60).toFixed(2) || 'err'}{' '}
+            {/*   {(cycleMatrix.distances[0][1] / 1000).toFixed(2)} km |
+              time: {(cycleMatrix.durations[0][1] / 60).toFixed(2)}{' '} */}
               minutes
             </p>
           </div>

@@ -1,4 +1,17 @@
 import express, { json } from 'express'
+import cors from 'cors'
+
+const whitelist = ['https://commutecompare.net']
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+}
+
 const app = express()
 const port = 3001
 
@@ -13,7 +26,7 @@ app.listen(port, () => {
 
 import axios from 'axios'
 
-app.get('/suggest', async (req, res) => {
+app.get('/suggest', cors(corsOptions), async (req, res) => {
   const { value, randomUUID } = req.query
   try {
     const response = await axios.get(
@@ -26,7 +39,7 @@ app.get('/suggest', async (req, res) => {
   }
 })
 
-app.get('/retrieve', async (req, res) => {
+app.get('/retrieve', cors(corsOptions), async (req, res) => {
   const { mapboxId, randomUUID } = req.query
   try {
     const response = await axios.get(
@@ -39,7 +52,7 @@ app.get('/retrieve', async (req, res) => {
   }
 })
 
-app.get('/matrix/:type/:coordinates/', async (req, res) => {
+app.get('/matrix/:type/:coordinates/', cors(corsOptions), async (req, res) => {
   const { coordinates, type } = req.params
   if (type === 'driving-traffic') {
     const { depart_at } = req.query

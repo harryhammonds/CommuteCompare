@@ -30,13 +30,12 @@ const Results = ({ className, matrix, walkMatrix, cycleMatrix }) => {
   const [electricityCost, setElectricityCost] = useState(0.32)
 
   useEffect(() => {
-    if (walkMatrix.distances && cycleMatrix.distances) {
-      if (searchQuery === '') {
-        getWalkCycleData()
-        searchData('toyota 2023', 0)
-      } else {
-        searchData(searchQuery, 0)
-      }
+    // need to check for missing API data on load
+    if (searchQuery === '') {
+      getWalkCycleData()
+      searchData('toyota 2023', 0)
+    } else {
+      searchData(searchQuery, 0)
     }
   }, [
     searchQuery,
@@ -322,8 +321,8 @@ const Results = ({ className, matrix, walkMatrix, cycleMatrix }) => {
                   </p>
                   <p>
                     type: {result.atvType.toUpperCase()} | distance:{' '}
-                    {result.distance.toFixed(2)} km | time: {result.time}{' '}
-                    minutes
+                    {result.distance.toFixed(2)} km | time:{' '}
+                    {result.time.toFixed(2)} minutes
                   </p>
                 </div>
                 <div>

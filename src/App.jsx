@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import '@fontsource/courier-prime/400.css'
 import '@fontsource/courier-prime/700.css'
+import '@fontsource/ibm-plex-mono/500.css'
+import '@fontsource/ibm-plex-mono/600.css'
 import '@fontsource/kosugi'
 import '@fontsource/kosugi-maru'
 
@@ -313,7 +315,10 @@ function App() {
                 <span className="text-4xl">4.</span> Compare Modes
               </h2>
             </div>
-            <div className={activeStep === 4 ? 'w-full' : 'hidden'}>
+            <div
+              className={activeStep === 4 ? 'w-full' : 'hidden'}
+              id="results-page"
+            >
               <h2 className={getHeaderClass(3)}>
                 <span className="text-4xl">4.</span> Compare Modes{' '}
                 <BackButton

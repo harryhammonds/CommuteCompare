@@ -33,23 +33,33 @@ const Disclaimer = ({ className }) => {
           </button>
           <h2 className="font-display">INFORMATION AND ASSUMPTIONS</h2>
           <p>
-            This is a work in progress coding project so please do not take the
-            information seriously for now.
+            This is an evolving coding project so please be skeptical of
+            information provided.
           </p>
-          {/* <p>
+          <p>
             For now, premium fuel is loosely defined and is assumed to have a 7%
-            higher price.
-          </p> 
+            higher price. Diesel is not set to have a higher price. Non-plug-in
+            hybrid set to regular fuel. Price based on USEPA city fuel economy.
+            CO2 range is between city and highway.
+          </p>
           <p>CNG/LPG/Hydrogen data should be considered inaccurate.</p>
-          <p>Electricity mix and site data not precise.</p>*/}
+          <p>Electricity mix and site data not precise.</p>
           <p>
             Although based on government data, the information presented is
             based on my calculations which may not be correct due to incorrect
             assumptions about the data or otherwise. This software was not
             endorsed by any agency.
           </p>
-          <p>American car names, models, years in the data.</p>
-          <p>Use at your own risk.</p>
+          <p>US car names, models, years in the data. Updated Feb 2024.</p>
+
+          <a
+            href="https://github.com/harryhammonds/CommuteCompare/blob/main/LICENSE.txt"
+            target="_blank"
+            rel="noreferrer"
+            className="underline"
+          >
+            <p>MIT LICENSE TERMS</p>
+          </a>
         </div>
       )}
     </OutsideClickHandler>

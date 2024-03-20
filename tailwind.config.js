@@ -5,6 +5,8 @@ export default {
     fontFamily: {
       display: ['Kosugi Maru', 'sans-serif'],
       mono: ['Courier Prime', 'monospace'],
+      sans: ['Kosugi', 'sans-serif'],
+      'mono-2': ['IBM Plex Mono', 'monospace'],
     },
     screens: {
       sm: '640px',

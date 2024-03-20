@@ -157,15 +157,16 @@ importCSV('./src/assets/vehicles-slim.csv')
 app.get('/search', async (req, res) => {
   const queryText = req.query.query || 'tesla' // search?query=text
   const from = req.query.from || 0
+  const type = req.query.type || null
 
   try {
-    const results = await client.ft.search(
-      'idx:vehicle',
-      `@name:${queryText}*`,
-      {
-        LIMIT: { from: from, size: 20 },
-      }
-    )
+    const searchQuery = type
+      ? `@name:${queryText}* @atvType:${type}`
+      : `@name:${queryText}*`
+
+    const results = await client.ft.search('idx:vehicle', searchQuery, {
+      LIMIT: { from: from, size: 20 },
+    })
 
     const formattedResults = results.documents.map((doc) => ({
       year: doc.value.year,
@@ -179,6 +180,7 @@ app.get('/search', async (req, res) => {
       highwayA08: doc.value.highwayA08,
       atvType: doc.value.atvType,
       id: doc.value.id,
+      fuelType1: doc.value.fuelType1,
     }))
 
     res.json({ success: true, results: formattedResults })

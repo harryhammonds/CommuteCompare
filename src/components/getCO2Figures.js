@@ -139,6 +139,26 @@ export default function getCO2Figures(
     if (results[i].atvType === 'Gasoline' || results[i].atvType === '') {
       results[i].atvType = 'Petrol'
     }
+
+    if (typeof results[i].gCO2eCity === 'undefined') {
+      results[i].gCO2eCity = 0
+    }
+
+    if (typeof results[i].gCO2eHwy === 'undefined') {
+      results[i].gCO2eHwy = 0
+    }
+
+    if (typeof results[i].costCity === 'undefined') {
+      results[i].costCity = 0
+    }
+
+    if (typeof results[i].distance === 'undefined') {
+      results[i].distance = 0
+    }
+
+    if (typeof results[i].time === 'undefined') {
+      results[i].time = 0
+    }
   }
   return data
 }

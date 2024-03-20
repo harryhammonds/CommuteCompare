@@ -32,7 +32,9 @@ const Results = ({ className, matrix, walkMatrix, cycleMatrix }) => {
   useEffect(() => {
     // need to check for missing API data on load
     if (searchQuery === '') {
-      getWalkCycleData()
+      if (walkMatrix.distances && cycleMatrix.distances) {
+        getWalkCycleData()
+      }
       searchData('toyota 2023', 0)
     } else {
       searchData(searchQuery, 0)

@@ -1,11 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: ['selector', '[data-theme="dark"]'],
   theme: {
     fontFamily: {
       display: ['Kosugi Maru', 'sans-serif'],
-      mono: ['Courier Prime', 'monospace'],
-      sans: ['Kosugi', 'sans-serif'],
+      mono: ['JetBrains Mono Variable', 'monospace'],
+      sans: ['Inter Variable', 'sans-serif'],
       'mono-2': ['IBM Plex Mono', 'monospace'],
     },
     screens: {

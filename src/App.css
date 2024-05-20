@@ -5,8 +5,9 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  width: 100vw;
-  font-family: Kosugi, sans-serif;
+
+  max-width: 70rem;
+  margin: auto;
 }
 
 .hide-scrollbar::-webkit-scrollbar {

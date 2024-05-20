@@ -17,7 +17,7 @@ const Map = ({ className, originCoord, destinationCoord }) => {
         container: mapContainer.current,
         style: 'mapbox://styles/drblah/cls4ju9pw00dc01r67pmsgjwq',
         center: [174.8, -36.9],
-        zoom: 11,
+        zoom: 0,
       })
     }
 

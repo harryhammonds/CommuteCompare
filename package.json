@@ -13,10 +13,13 @@
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@fontsource-variable/inter": "^5.0.18",
+    "@fontsource-variable/jetbrains-mono": "^5.0.21",
     "@fontsource/courier-prime": "^5.0.18",
     "@fontsource/ibm-plex-mono": "^5.0.12",
     "@fontsource/kosugi": "^5.0.17",
     "@fontsource/kosugi-maru": "^5.0.11",
+    "@fontsource/space-mono": "^5.0.20",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",

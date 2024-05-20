@@ -181,9 +181,10 @@ const Autocomplete = ({
 
   if (showSuggestions) {
     suggestionsListComponent = (
-      <ul className="w-[20rem] sm:w-96 max-h-80 overflow-y-auto cursor-pointer hide-scrollbar z-10 absolute transition-all">
+      <ul className="w-full max-h-80 overflow-y-auto cursor-pointer hide-scrollbar z-10 absolute transition-all">
         {suggestions.map((suggestion, index) => {
-          let className = 'hover:bg-indigo-200 bg-white border-b border-gray-200'
+          let className =
+            'hover:bg-indigo-200 bg-white border-b border-gray-200'
 
           if (index === activeSuggestion) {
             className = 'hover:bg-indigo-200 bg-indigo-100'
@@ -216,7 +217,7 @@ const Autocomplete = ({
   return (
     <>
       <OutsideClickHandler onOutsideClick={() => setShowSuggestions(false)}>
-        <div className="relative">
+        <div className="relative dark:text-black">
           <input
             type="text"
             value={inputValue}
@@ -234,8 +235,8 @@ const Autocomplete = ({
           >
             <FontAwesomeIcon icon={faX} size="xs" />
           </button>
+          {suggestionsListComponent}
         </div>
-        {suggestionsListComponent}
       </OutsideClickHandler>
     </>
   )

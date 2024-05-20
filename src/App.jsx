@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import '@fontsource/courier-prime/400.css'
-import '@fontsource/courier-prime/700.css'
-import '@fontsource/ibm-plex-mono/500.css'
-import '@fontsource/ibm-plex-mono/600.css'
-import '@fontsource/kosugi'
+import '@fontsource-variable/jetbrains-mono'
+import '@fontsource/space-mono/400.css'
+import '@fontsource/space-mono/700.css'
+import '@fontsource-variable/inter'
 import '@fontsource/kosugi-maru'
 
 import { useSearchParams } from 'react-router-dom'
@@ -61,6 +60,14 @@ function App() {
           setActiveStep(4)
         }
       }
+    }
+
+    // theme change after first step
+    if (activeStep === 0) {
+      document.documentElement.classList.add('transition-[background-color]')
+      document.documentElement.classList.add('duration-[3000ms]')
+    } else {
+      document.documentElement.setAttribute('data-theme', '')
     }
   }, [activeStep])
 
@@ -141,15 +148,15 @@ function App() {
 
   function getStepClass(step) {
     if (activeStep === step && step === 3) {
-      return 'pb-8 transition-all translate-y-[-300px] duration-1000 w-80 sm:w-96'
+      return 'pl-8 pr-12 pb-8 transition-all translate-y-[-300px] duration-1000 w-full'
     } else if (activeStep === step) {
-      return 'pb-8 pt-2 transition-all w-80 sm:w-96'
+      return 'pl-8 pr-12 pb-8 pt-2 transition-all w-full'
     } else if (activeStep === 3) {
-      return 'opacity-0 transition-all w-80 sm:w-96'
+      return 'pl-8 pr-12 opacity-0 transition-all w-full'
     } else if (activeStep === 4) {
-      return 'hidden transition-all w-80 sm:w-96'
+      return 'pl-8 pr-12 hidden transition-all w-full'
     } else {
-      return 'w-80 sm:w-96'
+      return 'pl-8 pr-12'
     }
   }
 
@@ -157,7 +164,7 @@ function App() {
     if (activeStep === step || (activeStep === 4 && step === 3)) {
       return 'pt-6 pb-3 w-max'
     } else {
-      return 'pt-6 pb-3 w-max pl-8 text-neutral-400 transition-all duration-500'
+      return 'pt-6 pb-3 w-max text-neutral-400'
     }
   }
 
@@ -172,14 +179,14 @@ function App() {
         if (activeStep === i) {
           indicators.push(
             <div
-              className="w-2 h-2 bg-neutral-400 rounded-full mx-3 my-20 transition-all duration-1000"
+              className="w-2 h-2 bg-black dark:bg-white mx-3 my-10 transition-all duration-1000"
               key={i}
             ></div>
           )
         } else {
           indicators.push(
             <div
-              className="w-1 h-1 bg-black rounded-full mx-3 my-3 transition-all duration-1000"
+              className="w-1 h-1 bg-neutral-400 mx-3 my-3 transition-all duration-1000"
               key={i}
             ></div>
           )
@@ -201,7 +208,9 @@ function App() {
   return (
     <>
       <div className="flex justify-between items-center py-auto pl-6 sm:pl-10 pr-6 h-16">
-        <h1 className="font-display text-xl">COMMUTE ANALYSIS</h1>
+        <h1 className="font-display text-xl text-black dark:text-white">
+          COMMUTE ANALYSIS
+        </h1>
         <a
           href="https://github.com/harryhammonds/CommuteCompare"
           target="_blank"
@@ -220,70 +229,73 @@ function App() {
         </div>
 
         <div
-          className={`flex justify-between ${activeStep === 4 ? 'md:w-[75rem]' : 'md:w-[60rem]'} md:pt-12 max-h-screen transition-all overflow-y-auto`}
+          className={`flex flex-col justify-between ${activeStep === 4 ? 'md:w-[75rem]' : 'md:w-[60rem]'} md:pt-12 h-full overflow-y-auto`}
         >
           <div className="flex items-start flex-col pl-3 sm:pl-6 [&_h2]:text-xl">
             <div className={getStepClass(0)}>
               <h2 className={getHeaderClass(0)}>
-                <span className="text-4xl">1.</span> Destination
+                <span className="font-medium text-2xl pr-2">1.</span>{' '}
+                Destination
               </h2>
               {activeStep === 0 ? (
                 <Autocomplete
                   source="mapbox"
-                  value={value(0)}
-                  placeholder="please enter commute destination..."
+                  value={value(1)}
+                  placeholder="Enter From Address..."
                   onComplete={(e) => {
-                    updateDest(e[1])
-                    setValues((values) => [e, ...values.slice(1)]) // update first value
+                    updateOrigin(e[1])
+                    setValues((values) => [values[0], e, ...values.slice(2)]) // update second value
                     setActiveStep(1)
                   }}
                   randomUUID={randomUUID}
-                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 text-sm sm:text-base w-[20rem] sm:w-96 transition-all"
-                  id="destination"
+                  className="border-b-2 border-neutral-400 placeholder-black dark:placeholder-neutral-400 focus:outline-none focus:border-indigo-300 focus:placeholder-neutral-500 focus:bg-white dark:focus:bg-neutral-200 dark:text-white dark:focus:text-black focus:ring-transparent outline-none tracking-widest bg-transparent border-solid pt-2 pl-2 pr-6 text-sm sm:text-base w-full transition-all"
+                  id="origin"
                 />
               ) : (
                 <InputPreview
                   value={value(0)}
                   onClick={() => setActiveStep(0)}
-                  className="text-neutral-400 font-mono text-left pl-12 underline decoration-dashed underline-offset-2 cursor-pointer transition-all"
+                  className="text-neutral-400 font-mono-2 pl-2 text-left underline decoration-dashed underline-offset-2 cursor-pointer transition-all"
                 />
               )}
             </div>
             <div className={getStepClass(1)}>
               <h2 className={getHeaderClass(1)}>
-                <span className="text-4xl">2.</span> Home Address
+                <span className="font-medium text-2xl pr-2">2.</span> Home
+                Address
               </h2>
               {activeStep === 1 ? (
                 <Autocomplete
                   source="mapbox"
-                  value={value(1)}
-                  placeholder="please enter commute origin..."
+                  value={value(0)}
+                  placeholder="Enter To Address..."
                   onComplete={(e) => {
-                    updateOrigin(e[1])
-                    setValues((values) => [values[0], e, ...values.slice(2)]) // update second value
+                    updateDest(e[1])
+                    setValues((values) => [e, ...values.slice(1)]) // update first value
                     setActiveStep(2)
                   }}
                   randomUUID={randomUUID}
-                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 text-sm sm:text-base w-[20rem] sm:w-96 transition-all"
-                  id="origin"
+                  className="border-b-2 border-neutral-400 placeholder-black dark:placeholder-neutral-400 focus:outline-none focus:border-indigo-300 focus:placeholder-neutral-500 focus:bg-white dark:focus:bg-neutral-200 dark:text-white dark:focus:text-black focus:ring-transparent outline-none tracking-widest bg-transparent border-solid pt-2 pl-2 pr-6 text-sm sm:text-base w-full transition-all"
+                  id="destination"
                 />
               ) : (
                 <InputPreview
                   value={value(1)} // or get from search params -> address from a const made available to the input form !!! TODAY
                   onClick={() => setActiveStep(1)}
-                  className="text-neutral-400 font-mono text-left pl-12 underline decoration-dashed underline-offset-2 cursor-pointer transition-all"
+                  className="text-neutral-400 font-mono-2 pl-2 text-left underline decoration-dashed underline-offset-2 cursor-pointer transition-all"
                 />
               )}
             </div>
             <div className={getStepClass(2)}>
               <h2 className={getHeaderClass(2)}>
-                <span className="text-4xl">3.</span> Time of Day
+                <span className="font-medium text-2xl pr-2">3.</span> Time of
+                Day
               </h2>
               {activeStep === 2 ? (
                 <Autocomplete
                   source="time"
                   value={value(2)}
-                  placeholder="please enter journey start time..."
+                  placeholder="Enter Time of Commute..."
                   onComplete={(e) => {
                     //prepareMatrix(e[0])
                     setParam('time', e[0])
@@ -299,20 +311,21 @@ function App() {
                       setAlreadyLoaded(true)
                     }, 1000)
                   }}
-                  className="border-2 border-gray-400 border-solid font-mono pt-2 pl-2 pr-6 text-sm sm:text-base w-[20rem] sm:w-96 transition-all"
+                  className="border-b-2 border-neutral-400 placeholder-black dark:placeholder-neutral-400 focus:outline-none focus:border-indigo-300 focus:placeholder-neutral-500 focus:bg-white dark:focus:bg-neutral-200 dark:text-white dark:focus:text-black focus:ring-transparent outline-none tracking-widest bg-transparent border-solid pt-2 pl-2 pr-6 text-sm sm:text-base w-full transition-all"
                   id="time"
                 />
               ) : (
                 <InputPreview
                   value={value(2)}
                   onClick={() => setActiveStep(2)}
-                  className="text-neutral-400 font-mono text-left pl-12 underline decoration-dashed underline-offset-2 cursor-pointer transition-all"
+                  className="text-neutral-400 font-mono-2 pl-2 text-left underline decoration-dashed underline-offset-2 cursor-pointer transition-all"
                 />
               )}
             </div>
             <div className={getStepClass(3)}>
               <h2 className={getHeaderClass(3)}>
-                <span className="text-4xl">4.</span> Compare Modes
+                <span className="font-medium text-2xl pr-2">4.</span> Compare
+                Modes
               </h2>
             </div>
             <div
@@ -320,7 +333,8 @@ function App() {
               id="results-page"
             >
               <h2 className={getHeaderClass(3)}>
-                <span className="text-4xl">4.</span> Compare Modes{' '}
+                <span className="font-medium text-2xl pr-2">4.</span> Compare
+                Modes{' '}
                 <BackButton
                   className="inline pl-3 cursor-pointer transition-all"
                   onClick={() => goBack()}
@@ -338,7 +352,7 @@ function App() {
             </div>
           </div>
 
-          <div className="flex flex-col items-center pt-20">
+          <div className="flex items-center justify-center">
             {activeStepIndicator()}
           </div>
         </div>
